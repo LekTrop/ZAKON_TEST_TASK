@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+elasticsearch:
+  search:
+    similarity:
+      word:
+        length:
+          min: 3
+  url: localhost:9200
+  timeout:
+    socket: 10000
+    connection: 2000
+executor:
+  elasticsearch:
+    threads:
+      count: 4

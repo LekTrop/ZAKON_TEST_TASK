@@ -1,0 +1,34 @@
+version: '3.7'
+services:
+
+  elasticsearch:
+    container_name: demo-elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - "discovery.type=single-node"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: curl -s -f elasticsearch:9200/_cat/health >/dev/null || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 6
+
+  kibana:
+    container_name: demo-kibana
+    image: docker.elastic.co/kibana/kibana:7.17.8
+    ports:
+      - "5601:5601"
+    healthcheck:
+      test: curl -s -f kibana:5601/status >/dev/null || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 6
+    depends_on:
+      - elasticsearch
+
+volumes:
+  es_data:
