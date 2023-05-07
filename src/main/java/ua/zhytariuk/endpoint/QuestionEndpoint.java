@@ -1,5 +1,7 @@
 package ua.zhytariuk.endpoint;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.web.bind.annotation.*;
 import ua.zhytariuk.model.Question;
 import ua.zhytariuk.model.mapper.QuestionMapper;
@@ -33,6 +35,7 @@ public class QuestionEndpoint {
      * @return {@link List<QuestionDto>}
      */
     @GetMapping("/longest")
+    @Operation(summary = "Get top longest questions")
     public List<QuestionDto> findTopLongestQuestions(final @RequestParam("number") Integer number) {
         return questionService.findTopLongestQuestions(number)
                               .stream()
@@ -44,12 +47,13 @@ public class QuestionEndpoint {
      * Find most similar questions or create new if they do not exist
      *
      * @param question to search most similar
-     * @param number of questions to return
+     * @param number   of questions to return
      * @return {@link List<QuestionDto>} most similar questions
      */
     @PostMapping("/similar")
-    public List<QuestionDto> findMostSimilarOrCreateIfNotExist(final @RequestParam("question") String question,
-                                                               final @RequestParam("number") Integer number) {
+    @Operation(summary = "Find most similar or create new question")
+    public List<QuestionDto> findMostSimilarOrCreateIfNotExist(final @Parameter(description = "Requested question to search most similar") @RequestParam("question") String question,
+                                                               final @Parameter(description = "Number of similar question to return") @RequestParam("number") Integer number) {
         return questionService.findMostSimilarOrCreateIfNotExist(question, number)
                               .stream()
                               .map(questionMapper::toQuestionDto)
